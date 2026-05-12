@@ -1,0 +1,35 @@
+{
+  "name": "untitled10",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "esbuild": "^0.21.5",
+    "express": "^5.2.1",
+    "nanoid": "^3.3.12",
+    "picocolors": "^1.1.1",
+    "postcss": "^8.5.14",
+    "prettier": "^3.8.3",
+    "rollup": "^4.60.3",
+    "source-map-js": "^1.2.1",
+    "vite": "^5.4.21"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Adil-0786/Job-Portal-Web-Application.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Adil-0786/Job-Portal-Web-Application/issues"
+  },
+  "homepage": "https://github.com/Adil-0786/Job-Portal-Web-Application#readme"
+}
