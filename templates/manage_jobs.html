@@ -1,0 +1,80 @@
+{% extends "base_app.html" %}
+{% block title %}{{ page_title }} | JobBoard{% endblock %}
+{% block content %}
+<section class="page-section">
+    <div class="page-heading page-heading-inline">
+        <div>
+            <h1>{{ page_title }}</h1>
+            <p>{{ page_count }}</p>
+        </div>
+        {% if show_create %}
+            <a class="btn btn-dark app-btn" href="{{ url_for('main.create_job') }}">Post Job</a>
+        {% endif %}
+    </div>
+    <div class="panel-surface table-panel">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0 app-table">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Company</th>
+                    {% if admin_mode %}
+                        <th>Posted By</th>
+                    {% else %}
+                        <th>Applicants</th>
+                    {% endif %}
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for job in jobs %}
+                    <tr>
+                        <td>{{ job.title }}</td>
+                        <td>{{ job.company }}</td>
+                        {% if admin_mode %}
+                            <td>{{ job.employer_name }}</td>
+                        {% else %}
+                            <td>{{ job.application_total }}</td>
+                        {% endif %}
+                        <td>{{ job.created_at|pretty_date }}</td>
+                        <td><span class="status-pill">{{ 'active' if job.status == 'open' else 'closed' }}</span></td>
+                        <td class="text-end">
+                            <div class="action-row">
+                                <a class="icon-button" href="{{ url_for('main.job_detail', job_id=job.id) }}" title="View">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                {% if not admin_mode %}
+                                    <a class="icon-button" href="{{ url_for('main.job_applications', job_id=job.id) }}" title="Applicants">
+                                        <i class="bi bi-people"></i>
+                                    </a>
+                                    <a class="icon-button" href="{{ url_for('main.edit_job', job_id=job.id) }}" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form method="post" action="{{ url_for('main.delete_job', job_id=job.id) }}">
+                                        <button class="icon-button icon-danger" type="submit" title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <form method="post" action="{{ url_for('main.admin_delete_job', job_id=job.id) }}">
+                                        <button class="icon-button icon-danger" type="submit" title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-secondary py-4">No jobs found.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

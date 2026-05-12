@@ -1,0 +1,64 @@
+{% extends "base_app.html" %}
+{% block title %}Manage Users | JobBoard{% endblock %}
+{% block content %}
+<section class="page-section">
+    <div class="page-heading">
+        <h1>Manage Users</h1>
+        <p>{{ total_users }} total users</p>
+    </div>
+    <div class="panel-surface table-panel">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0 app-table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Change Role</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td><span class="status-pill">{{ user.role }}</span></td>
+                        <td>
+                            {% if user.role == 'admin' %}
+                                <div class="role-form locked-role">
+                                    <select class="form-select" disabled>
+                                        <option>Admin</option>
+                                    </select>
+                                </div>
+                            {% else %}
+                                <form method="post" action="{{ url_for('main.update_user_role', user_id=user.id) }}" class="role-form">
+                                    <select class="form-select" name="role">
+                                        <option value="seeker" {% if user.role == 'seeker' %}selected{% endif %}>Seeker</option>
+                                        <option value="employer" {% if user.role == 'employer' %}selected{% endif %}>Employer</option>
+                                    </select>
+                                    <button class="btn btn-sm btn-outline-dark" type="submit">Save</button>
+                                </form>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            {% if user.role != 'admin' %}
+                                <form method="post" action="{{ url_for('main.delete_user', user_id=user.id) }}">
+                                    <button class="icon-button icon-danger" type="submit" title="Delete user">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center text-secondary py-4">No users found.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

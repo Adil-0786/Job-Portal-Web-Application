@@ -1,0 +1,52 @@
+{% extends "base_app.html" %}
+{% block title %}Applicants | JobBoard{% endblock %}
+{% block content %}
+<section class="page-section">
+    <div class="page-heading page-heading-inline">
+        <div>
+            <h1>{{ job.title }}</h1>
+            <p>{{ applications|length }} applications received</p>
+        </div>
+        <a class="btn btn-outline-dark" href="{{ url_for('main.employer_manage_jobs') }}">Back</a>
+    </div>
+    <div class="panel-surface table-panel">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0 app-table">
+                <thead>
+                <tr>
+                    <th>Applicant</th>
+                    <th>Email</th>
+                    <th>Applied</th>
+                    <th>Status</th>
+                    <th>Cover Letter</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for application in applications %}
+                    <tr>
+                        <td>{{ application.name }}</td>
+                        <td>{{ application.email }}</td>
+                        <td>{{ application.created_at|pretty_date }}</td>
+                        <td>
+                            <form method="post" action="{{ url_for('main.update_application_status', application_id=application.id) }}" class="role-form">
+                                <select class="form-select" name="status">
+                                    {% for key, label in application_status_labels.items() %}
+                                        <option value="{{ key }}" {% if application.status == key %}selected{% endif %}>{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button class="btn btn-sm btn-outline-dark" type="submit">Save</button>
+                            </form>
+                        </td>
+                        <td class="cover-cell">{{ application.cover_letter or "No cover letter submitted." }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center text-secondary py-4">No applications yet.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

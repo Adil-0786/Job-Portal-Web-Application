@@ -1,0 +1,63 @@
+{% extends "base_app.html" if g.user else "base_public.html" %}
+{% block title %}{{ job.title }} | JobBoard{% endblock %}
+{% block content %}
+<section class="page-section">
+    <div class="detail-grid">
+        <div class="panel-surface detail-panel">
+            <div class="detail-header">
+                <div>
+                    <h1>{{ job.title }}</h1>
+                    <p>{{ job.company }}</p>
+                </div>
+                <span class="type-pill">{{ job_type_labels.get(job.job_type, job.job_type) }}</span>
+            </div>
+            <div class="job-meta-row detail-meta">
+                <span><i class="bi bi-geo-alt"></i> {{ job.location }}</span>
+                <span><i class="bi bi-cash"></i> {{ job.salary|currency }}</span>
+                <span><i class="bi bi-clock"></i> {{ job.created_at|pretty_date }}</span>
+                <span class="tag-pill">{{ job.category }}</span>
+            </div>
+            <div class="detail-copy">{{ job.description }}</div>
+        </div>
+
+        <div class="detail-side">
+            <div class="panel-surface">
+                <h2>Apply</h2>
+                {% if g.user and g.user.role == 'seeker' %}
+                    {% if application %}
+                        <div class="status-notice">You already applied for this role.</div>
+                    {% else %}
+                        <form method="post" action="{{ url_for('main.apply', job_id=job.id) }}" class="form-stack">
+                            <div>
+                                <label class="form-label" for="cover_letter">Cover Letter</label>
+                                <textarea class="form-control" id="cover_letter" name="cover_letter" rows="7" placeholder="Write a short intro"></textarea>
+                            </div>
+                            <button class="btn btn-dark app-btn" type="submit" {% if job.status != 'open' %}disabled{% endif %}>Submit Application</button>
+                        </form>
+                    {% endif %}
+                {% elif g.user and g.user.role == 'employer' %}
+                    <p class="helper-copy mb-0">Employers manage listings and applicants from the sidebar.</p>
+                {% elif g.user and g.user.role == 'admin' %}
+                    <p class="helper-copy mb-0">Admins manage jobs and users from the sidebar.</p>
+                {% else %}
+                    <a class="btn btn-dark app-btn" href="{{ url_for('main.login', next=url_for('main.job_detail', job_id=job.id)) }}">Login to Apply</a>
+                {% endif %}
+            </div>
+
+            <div class="panel-surface">
+                <h2>Related Jobs</h2>
+                <div class="related-list">
+                    {% for related in similar_jobs %}
+                        <a class="related-item" href="{{ url_for('main.job_detail', job_id=related.id) }}">
+                            <strong>{{ related.title }}</strong>
+                            <span>{{ related.company }} · {{ related.location }}</span>
+                        </a>
+                    {% else %}
+                        <p class="helper-copy mb-0">No related jobs yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

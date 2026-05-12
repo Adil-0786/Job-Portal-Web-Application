@@ -1,0 +1,47 @@
+{% extends "base_app.html" %}
+{% block title %}Dashboard | JobBoard{% endblock %}
+{% block content %}
+<section class="page-section">
+    <div class="stats-grid">
+        {% for stat in stats %}
+            <article class="overview-card">
+                <div>
+                    <span>{{ stat.label }}</span>
+                    <strong>{{ stat.value }}</strong>
+                </div>
+                <div class="overview-icon tone-{{ stat.tone }}"><i class="bi {{ stat.icon }}"></i></div>
+            </article>
+        {% endfor %}
+    </div>
+
+    <div class="section-title-row">
+        <div>
+            <h1 class="section-title">Recent Jobs</h1>
+        </div>
+        <a class="text-link-action" href="{{ url_for('main.admin_manage_jobs') }}">View all <i class="bi bi-arrow-right"></i></a>
+    </div>
+
+    <div class="job-stack">
+        {% for job in recent_jobs %}
+            <article class="job-surface">
+                <div class="job-surface-icon"><i class="bi bi-file-earmark-text"></i></div>
+                <div class="job-surface-main">
+                    <h3>{{ job.title }}</h3>
+                    <p>{{ job.company }}</p>
+                    <div class="job-meta-row">
+                        <span><i class="bi bi-geo-alt"></i> {{ job.location }}</span>
+                        <span><i class="bi bi-cash"></i> {{ job.salary|currency }}</span>
+                        <span><i class="bi bi-clock"></i> {{ job.created_at|pretty_date }}</span>
+                        <span class="tag-pill">{{ job.category }}</span>
+                    </div>
+                </div>
+                <div class="job-surface-side">
+                    <span class="type-pill">{{ job_type_labels.get(job.job_type, job.job_type) }}</span>
+                </div>
+            </article>
+        {% else %}
+            <div class="panel-surface empty-state">No jobs available yet.</div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

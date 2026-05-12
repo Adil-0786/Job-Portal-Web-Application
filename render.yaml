@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: jobboard-flask
+    runtime: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    healthCheckPath: /login
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: DATA_DIR
+        value: /var/data
+      - key: ALLOW_LOCAL_LOGIN
+        value: "true"
+      - key: SEED_SAMPLE_DATA
+        value: "true"
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+    disk:
+      name: jobboard-data
+      mountPath: /var/data
+      sizeGB: 1

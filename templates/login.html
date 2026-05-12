@@ -1,0 +1,57 @@
+{% extends "base_public.html" %}
+{% block title %}Login | JobBoard{% endblock %}
+{% block content %}
+<section class="auth-layout">
+    <div class="auth-hero">
+        <span class="section-kicker">Verified access</span>
+        <h1>Sign in with your Google account and use the app as a real job board.</h1>
+        <p>Google sign-in is the primary login flow. Local login stays available for seeded admin and demo accounts.</p>
+        <div class="public-stats">
+            <div class="metric-card">
+                <span>Open Jobs</span>
+                <strong>{{ stats.jobs }}</strong>
+            </div>
+            <div class="metric-card">
+                <span>Companies</span>
+                <strong>{{ stats.companies }}</strong>
+            </div>
+            <div class="metric-card">
+                <span>Applications</span>
+                <strong>{{ stats.applications }}</strong>
+            </div>
+        </div>
+        <a class="text-link-action" href="{{ url_for('main.jobs') }}">Browse live jobs <i class="bi bi-arrow-right"></i></a>
+    </div>
+    <div class="auth-card">
+        <h2>Welcome back</h2>
+        <p class="auth-muted">Use your verified Google identity or a local demo account.</p>
+        {% if google_oauth_enabled %}
+            <a class="btn btn-google" href="{{ url_for('main.google_login', next=next_url) }}">
+                <i class="bi bi-google"></i>
+                <span>Continue with Google</span>
+            </a>
+        {% else %}
+            <button class="btn btn-google" type="button" disabled>
+                <i class="bi bi-google"></i>
+                <span>Google Sign-In Not Configured</span>
+            </button>
+            <p class="helper-copy mb-0">Add `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` to enable live Google authentication.</p>
+        {% endif %}
+
+        <div class="divider-label"><span>or use local access</span></div>
+        <form method="post" class="form-stack">
+            <input type="hidden" name="next" value="{{ next_url }}">
+            <div>
+                <label class="form-label" for="email">Email</label>
+                <input class="form-control" id="email" name="email" type="email" required>
+            </div>
+            <div>
+                <label class="form-label" for="password">Password</label>
+                <input class="form-control" id="password" name="password" type="password" required>
+            </div>
+            <button class="btn btn-dark app-btn" type="submit">Login</button>
+        </form>
+        <p class="helper-copy">Need a local account? <a href="{{ url_for('main.register') }}">Create one</a></p>
+    </div>
+</section>
+{% endblock %}

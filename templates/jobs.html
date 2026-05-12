@@ -1,0 +1,76 @@
+{% extends "base_app.html" if g.user else "base_public.html" %}
+{% block title %}Browse Jobs | JobBoard{% endblock %}
+{% block content %}
+<section class="page-section">
+    <div class="page-heading">
+        <h1>Browse Jobs</h1>
+        <p>{{ total_jobs }} jobs available</p>
+    </div>
+
+    <form class="panel-surface filter-panel" method="get">
+        <div class="filter-grid">
+            <div class="filter-input search-input">
+                <i class="bi bi-search"></i>
+                <input class="form-control" type="text" name="q" value="{{ filters.q }}" placeholder="Search jobs or companies...">
+            </div>
+            <div class="filter-input">
+                <select class="form-select" name="location">
+                    <option value="">Location...</option>
+                    {% for item in filter_options.locations %}
+                        <option value="{{ item.location }}" {% if filters.location == item.location %}selected{% endif %}>{{ item.location }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-input">
+                <select class="form-select" name="category">
+                    <option value="">All Categories</option>
+                    {% for item in filter_options.categories %}
+                        <option value="{{ item.category }}" {% if filters.category == item.category %}selected{% endif %}>{{ item.category }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-input">
+                <select class="form-select" name="job_type">
+                    <option value="">All Types</option>
+                    {% for key, label in job_type_labels.items() %}
+                        <option value="{{ key }}" {% if filters.job_type == key %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-input">
+                <select class="form-select" name="company">
+                    <option value="">All Companies</option>
+                    {% for item in filter_options.companies %}
+                        <option value="{{ item.company }}" {% if filters.company == item.company %}selected{% endif %}>{{ item.company }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button class="btn btn-dark app-btn" type="submit">Search</button>
+        </div>
+    </form>
+
+    <div class="job-stack">
+        {% for job in jobs %}
+            <article class="job-surface">
+                <div class="job-surface-icon"><i class="bi bi-file-earmark-text"></i></div>
+                <div class="job-surface-main">
+                    <h3>{{ job.title }}</h3>
+                    <p>{{ job.company }}</p>
+                    <div class="job-meta-row">
+                        <span><i class="bi bi-geo-alt"></i> {{ job.location }}</span>
+                        <span><i class="bi bi-cash"></i> {{ job.salary|currency }}</span>
+                        <span><i class="bi bi-clock"></i> {{ job.created_at|pretty_date }}</span>
+                        <span class="tag-pill">{{ job.category }}</span>
+                    </div>
+                </div>
+                <div class="job-surface-side">
+                    <span class="type-pill">{{ job_type_labels.get(job.job_type, job.job_type) }}</span>
+                    <a class="btn btn-sm btn-outline-dark" href="{{ url_for('main.job_detail', job_id=job.id) }}">View</a>
+                </div>
+            </article>
+        {% else %}
+            <div class="panel-surface empty-state">No jobs matched those filters.</div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

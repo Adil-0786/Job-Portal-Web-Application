@@ -1,0 +1,38 @@
+{% extends "base_public.html" %}
+{% block title %}Create Account | JobBoard{% endblock %}
+{% block content %}
+<section class="auth-layout auth-layout-single">
+    <div class="auth-card auth-card-wide">
+        <h2>Create a local account</h2>
+        <p class="auth-muted">Google sign-in is supported for real authentication. This form remains available for local admin and demo access.</p>
+        <form method="post" class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label" for="name">Full name</label>
+                <input class="form-control" id="name" name="name" type="text" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="email">Email</label>
+                <input class="form-control" id="email" name="email" type="email" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="password">Password</label>
+                <input class="form-control" id="password" name="password" type="password" minlength="8" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="role">Account type</label>
+                <select class="form-select" id="role" name="role" required>
+                    <option value="seeker">Job Seeker</option>
+                    <option value="employer">Employer</option>
+                </select>
+            </div>
+            <div class="col-12">
+                <label class="form-label" for="company">Company</label>
+                <input class="form-control" id="company" name="company" type="text" placeholder="Required for employers">
+            </div>
+            <div class="col-12">
+                <button class="btn btn-dark app-btn" type="submit">Create account</button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

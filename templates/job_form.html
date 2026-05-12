@@ -1,0 +1,61 @@
+{% extends "base_app.html" %}
+{% block title %}{{ form_title }} | JobBoard{% endblock %}
+{% block content %}
+<section class="page-section">
+    <div class="page-heading page-heading-inline">
+        <div>
+            <h1>{{ form_title }}</h1>
+            <p>Fill in the job details and publish the listing.</p>
+        </div>
+    </div>
+    <div class="panel-surface form-panel">
+        <form method="post" class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label" for="title">Job Title</label>
+                <input class="form-control" id="title" name="title" type="text" value="{{ draft.title }}" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="company">Company</label>
+                <input class="form-control" id="company" name="company" type="text" value="{{ draft.company }}" required>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label" for="salary">Salary</label>
+                <input class="form-control" id="salary" name="salary" type="number" min="0" value="{{ draft.salary }}" required>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label" for="location">Location</label>
+                <input class="form-control" id="location" name="location" type="text" value="{{ draft.location }}" required>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label" for="category">Category</label>
+                <input class="form-control" id="category" name="category" type="text" value="{{ draft.category }}" required>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label" for="job_type">Type</label>
+                <select class="form-select" id="job_type" name="job_type">
+                    {% for key, label in job_type_labels.items() %}
+                        <option value="{{ key }}" {% if draft.job_type == key %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label" for="status">Status</label>
+                <select class="form-select" id="status" name="status">
+                    <option value="open" {% if draft.status == 'open' %}selected{% endif %}>Active</option>
+                    <option value="closed" {% if draft.status == 'closed' %}selected{% endif %}>Closed</option>
+                </select>
+            </div>
+            <div class="col-12">
+                <label class="form-label" for="description">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="8" required>{{ draft.description }}</textarea>
+            </div>
+            <div class="col-12">
+                <div class="form-actions">
+                    <button class="btn btn-dark app-btn" type="submit">{{ submit_label }}</button>
+                    <a class="btn btn-outline-dark" href="{{ url_for('main.employer_manage_jobs') }}">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}
